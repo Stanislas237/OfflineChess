@@ -459,10 +459,18 @@ function switch_piece (source, target){
             if (target.classList[2]) target.classList.remove(target.classList[2]);
         }
     }
-    for (j = 2; j < 6; j++){
-        if (source.classList[2]){
-            target.classList.add(source.classList[2]);
-            source.classList.remove(source.classList[2]);
-        }
-    }
+
+    // De pion à dame
+    let line = parseInt(target.parentNode.classList[0]);
+    if ((line == 1 || line == 8) && inside("pawn", source.classList)){
+        target.classList.add(source.classList[2], source.classList[2][0] + "queen", "queen")
+        for (j = 2; j < 6; j++)
+            if (source.classList[2])
+                source.classList.remove(source.classList[2]);
+    } else
+        for (j = 2; j < 6; j++)
+            if (source.classList[2]){
+                target.classList.add(source.classList[2]);
+                source.classList.remove(source.classList[2]);
+            }
 }
