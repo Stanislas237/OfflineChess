@@ -1,6 +1,6 @@
 let tab= document.getElementsByTagName("td");
 let lines = document.getElementsByTagName("tr");
-let caption = document.getElementsByTagName("caption");
+let caption = document.querySelector("#turn-indicator");
 let step = 0;
 let dead_pieces = new Array();
 let target_list = new Array();
@@ -8,20 +8,31 @@ let blacks = new Array();
 let whites = new Array();
 let wrooks = new Array();
 let brooks = new Array();
-let ennemy = "black";
+let ennemy = "noir";
 let friend = "";
 let target = null;
 let target_line = 0;
 let self_line = 0;
 let dif = 0;
 let l = 0;
-let current_turn = "white";
+let current_turn = "blanc";
 let selected_piece = null;
 let bg_color = "";
 let wking = null;
 let bking = null;
 
 let playing = true;
+
+const reload = document.querySelector("#reload");
+const back = document.querySelector("#back");
+
+document.addEventListener("DOMContentLoaded", ()=>{
+    jeu();
+    start();
+});
+
+reload.addEventListener("click", ()=>window.location.reload());
+back.addEventListener("click", ()=>window.location.href = "./");
 
 function start (){
     for (i=0; i<tab.length; i++){
@@ -31,15 +42,15 @@ function start (){
     }
     brooks = [tab[0], tab[7]];
     wrooks = [tab[56], tab[63]];
-    caption[0].innerHTML = current_turn.toUpperCase() + "'s TURN";
+    caption.innerHTML = "Tour des " + current_turn + "s";
 }
 
 function jeu(){
     for (i=0; i<tab.length; i++){
         if (inside("b", tab[i].classList)){
-            change_color(tab[i], "brown", false);
+            change_color(tab[i], "black", false);
         }else{
-            change_color(tab[i], "white", false);
+            change_color(tab[i], "rgb(48, 45, 44)", false);
         }
         click_event(tab[i], current_turn);
     }
@@ -48,10 +59,10 @@ function jeu(){
 function pawn_move(obj, test = false){
     if (inside("wpawn", obj.classList)){
         step = (inside("first", obj.classList) ? -2 : -1);
-        ennemy = "black";
+        ennemy = "noir";
     }else if (inside("bpawn", obj.classList)){
         step = (inside("first", obj.classList) ? 2 : 1);
-        ennemy = "white";
+        ennemy = "blanc";
     }
 
     let next_box = parseInt(obj.parentNode.classList[0]);
@@ -88,8 +99,8 @@ function pawn_move(obj, test = false){
 }
 
 function fool_move (obj, test = false){
-    ennemy = (inside("wfool", obj.classList)) ? "black" : "white";
-    friend = (inside("wfool", obj.classList)) ? "white" : "black";
+    ennemy = (inside("wfool", obj.classList)) ? "noir" : "blanc";
+    friend = (inside("wfool", obj.classList)) ? "blanc" : "noir";
     self_line = parseInt(obj.parentNode.classList[0]);
     l = 0;
     fool_direction(obj, self_line, true, true, test);
@@ -99,8 +110,8 @@ function fool_move (obj, test = false){
 }
 
 function rook_move (obj, test = false){
-    ennemy = (inside("wrook", obj.classList)) ? "black" : "white";
-    friend = (inside("wrook", obj.classList)) ? "white" : "black";
+    ennemy = (inside("wrook", obj.classList)) ? "noir" : "blanc";
+    friend = (inside("wrook", obj.classList)) ? "blanc" : "noir";
     self_line = parseInt(obj.parentNode.classList[0]);
     l = 0;
     rook_direction(obj, self_line, 'v', true, test);
@@ -110,8 +121,8 @@ function rook_move (obj, test = false){
 }
 
 function queen_move (obj, test = false){
-    ennemy = (inside("wqueen", obj.classList)) ? "black" : "white";
-    friend = (inside("wqueen", obj.classList)) ? "white" : "black";
+    ennemy = (inside("wqueen", obj.classList)) ? "noir" : "blanc";
+    friend = (inside("wqueen", obj.classList)) ? "blanc" : "noir";
     self_line = parseInt(obj.parentNode.classList[0]);
     l = 0;
 
@@ -129,8 +140,8 @@ function queen_move (obj, test = false){
 }
 
 function king_move (obj, test = false){
-    ennemy = (inside("wking", obj.classList)) ? "black" : "white";
-    friend = (inside("wking", obj.classList)) ? "white" : "black";
+    ennemy = (inside("wking", obj.classList)) ? "noir" : "blanc";
+    friend = (inside("wking", obj.classList)) ? "blanc" : "noir";
     self_line = parseInt(obj.parentNode.classList[0]);
     l = 0;
 
@@ -143,11 +154,11 @@ function king_move (obj, test = false){
     // Rocks move
     if (!test){
         if (inside("first", obj.classList)){
-            if (inside("white", obj.classList)){
+            if (inside("blanc", obj.classList)){
                 if (inside("first", wrooks[0].classList)) rocks_move(self_line, 'l');
                 if (inside("first", wrooks[1].classList)) rocks_move(self_line, 'r');
             }
-            if (inside("black", obj.classList)){
+            if (inside("noir", obj.classList)){
                 if (inside("first", brooks[0].classList)) rocks_move(self_line, 'l');
                 if (inside("first", brooks[1].classList)) rocks_move(self_line, 'r');
             }
@@ -156,8 +167,8 @@ function king_move (obj, test = false){
 }
 
 function knight_move (obj, test = false){
-    ennemy = (inside("wknight", obj.classList)) ? "black" : "white";
-    friend = (inside("wknight", obj.classList)) ? "white" : "black";
+    ennemy = (inside("wknight", obj.classList)) ? "noir" : "blanc";
+    friend = (inside("wknight", obj.classList)) ? "blanc" : "noir";
     self_line = parseInt(obj.parentNode.classList[0]);
     l = 0;
 
@@ -313,7 +324,7 @@ function change_color(obj, color = "aqua", cursor = true){
 
 function isOccupied (obj, color = ""){
     if (color == ""){
-        if (!inside("white", obj.classList) && !inside("black", obj.classList)){
+        if (!inside("blanc", obj.classList) && !inside("noir", obj.classList)){
             return false;
         }
         return true;
@@ -351,11 +362,14 @@ function inside(elt, list){
 }
 
 function click (obj){
+    if (document.title == "vs IA - Chess Titans" && current_turn == "noir")
+        return;
+
     bg_color = obj.style.backgroundColor;
     jeu();
     switch (bg_color){
-        case 'brown':
-        case 'white':
+        case 'black':
+        case 'rgb(48, 45, 44)':
         case 'aqua':
             if(inside(current_turn, obj.classList)){
                 change_color(obj);
@@ -368,8 +382,12 @@ function click (obj){
             switch_piece(selected_piece, obj);
             king_alarm ();
             if (playing){
-                current_turn = ((current_turn == "white") ? "black" : "white");
-                caption[0].innerHTML = current_turn.toUpperCase() + "'s TURN";    
+                if (current_turn == "blanc"){
+                    current_turn = "noir";
+                    try { playAI(); } catch (_) {}
+                }
+                else current_turn = "blanc";
+                caption.innerHTML = "Tour des " + current_turn + "s";
             }
     break;
 
@@ -380,8 +398,12 @@ function click (obj){
                 switch_piece(rook, lines[self_line - 1].children[2]);
                 king_alarm ();
                 if (playing){
-                    current_turn = ((current_turn == "white") ? "black" : "white");
-                    caption[0].innerHTML = current_turn.toUpperCase() + "'s TURN";    
+                    if (current_turn == "blanc"){
+                        current_turn = "noir";
+                        try { playAI(); } catch (_) {}
+                    }
+                    else current_turn = "blanc";
+                    caption.innerHTML = "Tour des " + current_turn + "s";
                 }
             }
             if (obj.classList[0] == "7"){
@@ -390,8 +412,12 @@ function click (obj){
                 switch_piece(rook, lines[self_line - 1].children[5]);
                 king_alarm ();
                 if (playing){
-                    current_turn = ((current_turn == "white") ? "black" : "white");
-                    caption[0].innerHTML = current_turn.toUpperCase() + "'s TURN";    
+                    if (current_turn == "blanc"){
+                        current_turn = "noir";
+                        try { playAI(); } catch (_) {}
+                    }
+                    else current_turn = "blanc";
+                    caption.innerHTML = "Tour des " + current_turn + "s";
                 }
             }
         break;
@@ -422,10 +448,10 @@ function king_alarm (){
     blacks = [];
     whites = [];
     for (i=0; i<tab.length; i++){
-        if (inside("white", tab[i].classList)){
+        if (inside("blanc", tab[i].classList)){
             whites.push(tab[i]);
         }
-        if (inside("black", tab[i].classList)){
+        if (inside("noir", tab[i].classList)){
             blacks.push(tab[i]);
         }
         if (inside("wking", tab[i].classList)){
@@ -435,7 +461,7 @@ function king_alarm (){
             bking = tab[i];
         }
     }        
-    if (current_turn == "white"){
+    if (current_turn == "blanc"){
         whites.forEach(elt => {
             target_l(elt);
         });
@@ -453,7 +479,8 @@ function switch_piece (source, target){
         if (inside("king", target.classList)){
             playing = false;
             target.style.backgroundColor = "yellow";
-            caption[0].innerHTML = "<p>" + ennemy.toUpperCase() + " LOST</p>";
+            caption.innerHTML = "Les " + current_turn + "s ont gagné";
+            reload.style.display = "block";
         }
         for (j = 2; j < 6; j++){
             if (target.classList[2]) target.classList.remove(target.classList[2]);

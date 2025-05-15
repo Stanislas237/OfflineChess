@@ -1,0 +1,86 @@
+#turn-indicator {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #ffcc00;
+}
+#grid{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+table{
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+    border: 4px solid #cc3300;
+}
+td{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 80% 80%;
+}
+.white:hover, .black:hover{
+    cursor: pointer;
+}
+.wpawn{
+    background-image: url(../img/Wpawn.png);
+}
+.bpawn{
+    background-image: url(../img/Bpawn.png);
+}
+.wking{
+    background-image: url(../img/Wking.png);
+}
+.bking{
+    background-image: url(../img/Bking.png);
+}
+.wfool{
+    background-image: url(../img/Wbishop.png);
+}
+.bfool{
+    background-image: url(../img/Bbishop.png);
+}
+.wknight{
+    background-image: url(../img/Wknight.png);
+}
+.bknight{
+    background-image: url(../img/Bknight.png);
+}
+.wqueen{
+    background-image: url(../img/Wqueen.png);
+}
+.bqueen{
+    background-image: url(../img/Bqueen.png);
+}
+.wrook{
+    background-image: url(../img/Wrook.png);
+}
+.brook{
+    background-image: url(../img/Brook.png);
+}
+button{
+    position: fixed;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+#reload{
+    display: none;
+    width: 70px;
+    height: 70px;
+    left: 47%;
+    top: 47%;
+    background: url(../img/reload.png);
+    background-size: cover;
+}
+#back{
+    width: 40px;
+    height: 40px;
+    left: 5%;
+    top: 10%;
+    background: url(../img/back.png);
+    background-size: cover;
+}

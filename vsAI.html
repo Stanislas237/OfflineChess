@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vs IA - Chess Titans</title>
+  <link rel="icon" sizes="321x312" href="img/icon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/game.css">
+</head>
+<body>
+  <h1>Méthode de Monte Carlo</h1>
+
+    <div id="turn-indicator">Tour des blancs</div>
+
+    <div id="grid">
+        <table border='5' align="center">
+            <tr class="1">
+                <td class="1 b noir brook rook first"></td>
+                <td class="2 w noir bknight knight"></td>
+                <td class="3 b noir bfool fool"></td>
+                <td class="4 w noir bqueen queen"></td>
+                <td class="5 b noir bking king first"></td>
+                <td class="6 w noir bfool fool"></td>
+                <td class="7 b noir bknight knight"></td>
+                <td class="8 w noir brook rook first"></td>
+            </tr>
+            <tr class="2">
+                <td class="1 w noir bpawn pawn first"></td>
+                <td class="2 b noir bpawn pawn first"></td>
+                <td class="3 w noir bpawn pawn first"></td>
+                <td class="4 b noir bpawn pawn first"></td>
+                <td class="5 w noir bpawn pawn first"></td>
+                <td class="6 b noir bpawn pawn first"></td>
+                <td class="7 w noir bpawn pawn first"></td>
+                <td class="8 b noir bpawn pawn first"></td>
+            </tr>
+            <tr class="3">
+                <td class="1 b"></td>
+                <td class="2 w"></td>
+                <td class="3 b"></td>
+                <td class="4 w"></td>
+                <td class="5 b"></td>
+                <td class="6 w"></td>
+                <td class="7 b"></td>
+                <td class="8 w"></td>
+            </tr>
+            <tr class="4">
+                <td class="1 w"></td>
+                <td class="2 b"></td>
+                <td class="3 w"></td>
+                <td class="4 b"></td>
+                <td class="5 w"></td>
+                <td class="6 b"></td>
+                <td class="7 w"></td>
+                <td class="8 b"></td>
+            </tr>
+            <tr class="5">
+                <td class="1 b"></td>
+                <td class="2 w"></td>
+                <td class="3 b"></td>
+                <td class="4 w"></td>
+                <td class="5 b"></td>
+                <td class="6 w"></td>
+                <td class="7 b"></td>
+                <td class="8 w"></td>
+            </tr>
+            <tr class="6">
+                <td class="1 w"></td>
+                <td class="2 b"></td>
+                <td class="3 w"></td>
+                <td class="4 b"></td>
+                <td class="5 w"></td>
+                <td class="6 b"></td>
+                <td class="7 w"></td>
+                <td class="8 b"></td>
+            </tr>
+            <tr class="7">
+                <td class="1 b blanc wpawn pawn first"></td>
+                <td class="2 w blanc wpawn pawn first"></td>
+                <td class="3 b blanc wpawn pawn first"></td>
+                <td class="4 w blanc wpawn pawn first"></td>
+                <td class="5 b blanc wpawn pawn first"></td>
+                <td class="6 w blanc wpawn pawn first"></td>
+                <td class="7 b blanc wpawn pawn first"></td>
+                <td class="8 w blanc wpawn pawn first"></td>
+            </tr>
+            <tr class="8">
+                <td class="1 w blanc wrook rook first"></td>
+                <td class="2 b blanc wknight knight"></td>
+                <td class="3 w blanc wfool fool"></td>
+                <td class="4 b blanc wqueen queen"></td>
+                <td class="5 w blanc wking king first"></td>
+                <td class="6 b blanc wfool fool"></td>
+                <td class="7 w blanc wknight knight"></td>
+                <td class="8 b blanc wrook rook first"></td>
+            </tr>
+        </table>
+    </div>
+
+    <button id="back"></button>
+    <button id="reload"></button>
+
+  <footer>By Stan.co | &copy; 2024</footer>
+  <script src="js/game.js"></script>
+  <script src="js/IA.js"></script>
+</body>
+</html>
