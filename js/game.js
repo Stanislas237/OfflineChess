@@ -389,7 +389,7 @@ function click (obj){
                 else current_turn = "blanc";
                 caption.innerHTML = "Tour des " + current_turn + "s";
             }
-    break;
+        break;
 
         case "rgb(128, 52, 228)":
             if (obj.classList[0] == "2"){

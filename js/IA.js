@@ -1,35 +1,28 @@
 class MonteCarloAI {
     constructor() {
-        this.maxSimulations = 700; // Nombre de simulations par coup
-        this.simulationDepth = 15; // Profondeur max des simulations
+        this.maxSimulations = 600; // Nombre de simulations par coup
+        this.simulationDepth = 6; // Profondeur max des simulations
     }
 
     // Sauvegarde complète de l'état du jeu
     saveGameState() {
-        const state = {
-            current_turn: current_turn,
-            playing: playing,
-            pieces: []
-        };
-
-        for (let i = 0; i < tab.length; i++) {
-            const piece = {
-                element: tab[i],
+        const pieces = [];
+        for (let i = 0; i < tab.length; i++)
+            pieces.push({
                 classes: [...tab[i].classList],
                 backgroundColor: tab[i].style.backgroundColor,
-            };
-            state.pieces.push(piece);
-        }
+            });
 
-        state.special = {
+        return {
+            current_turn,
+            playing,
+            pieces,
             wking: wking,
             bking: bking,
             wrooks: [...wrooks],
             brooks: [...brooks],
             dead_pieces: [...dead_pieces]
         };
-
-        return state;
     }
 
     // Restauration complète de l'état du jeu
@@ -37,20 +30,18 @@ class MonteCarloAI {
         current_turn = state.current_turn;
         playing = state.playing;
 
-        for (const piece of state.pieces) {
-            piece.element.className = '';
-            for (const cls of piece.classes)
-                piece.element.classList.add(cls);
-
-            piece.element.style.backgroundColor = piece.backgroundColor;
-        }
+        Array.from(tab).forEach((cell, i) => {
+            cell.className = '';
+            state.pieces[i].classes.forEach(cls => cell.classList.add(cls));
+            cell.style.backgroundColor = state.pieces[i].backgroundColor;
+        });
 
         // Restaure les variables spéciales
-        wking = state.special.wking;
-        bking = state.special.bking;
-        wrooks = [...state.special.wrooks];
-        brooks = [...state.special.brooks];
-        dead_pieces = [...state.special.dead_pieces];
+        wking = state.wking;
+        bking = state.bking;
+        wrooks = [...state.wrooks];
+        brooks = [...state.brooks];
+        dead_pieces = [...state.dead_pieces];
 
         reload.style.display = playing ? "none" : "block";
 
@@ -62,9 +53,9 @@ class MonteCarloAI {
     updatePieceLists() {
         blacks = [];
         whites = [];
-        for (let i = 0; i < tab.length; i++) {
-            if (inside("blanc", tab[i].classList)) whites.push(tab[i]);
-            if (inside("noir", tab[i].classList)) blacks.push(tab[i]);
+        for (const cell of tab) {
+            if (inside("blanc", cell.classList)) whites.push(cell);
+            if (inside("noir", cell.classList)) blacks.push(cell);
         }
     }
 
@@ -75,17 +66,17 @@ class MonteCarloAI {
         
         if (possibleMoves.length === 0) {
             this.restoreGameState(originalState);
-            alert("Aucun coup possible à jouer, j'abandonne !");
             playing = false;
             caption.innerHTML = "Les blancs ont gagné";
             reload.style.display = "block";
-            return null;
+            return;
         }
 
         const moveScores = [];
         for (const move of possibleMoves) {
             // Applique le coup temporairement
             this.applyMove(move);
+            const firstStepState = this.saveGameState();
             
             let score = 0;
             let simulations = 0;
@@ -97,13 +88,12 @@ class MonteCarloAI {
                 simulations++;
                 
                 // Restaure après simulation
-                this.restoreGameState(this.saveGameState());
-                this.applyMove(move);
+                this.restoreGameState(firstStepState);
             }
             
             moveScores.push({
                 move: move,
-                score: simulations > 0 ? score / simulations : 0
+                score: score / this.maxSimulations
             });
             
             // Restaure l'état original
@@ -143,31 +133,28 @@ class MonteCarloAI {
     applyMove(move) {
         switch_piece(move.piece, move.target);
         current_turn = current_turn === 'blanc' ? 'noir' : 'blanc';
+        this.updatePieceLists();
     }
 
     // Simule une partie aléatoire
     simulateRandomGame() {
         let depth = 0;
-        let currentColor = 'blanc'; // Commence avec l'adversaire
-        
+        let color = "blanc"
+
         while (depth < this.simulationDepth && playing) {
-            const moves = this.getAllPossibleMovesForColor(currentColor);
+            const moves = this.getAllPossibleMovesForColor(color);
             if (moves.length === 0) break;
-            
-            // Coup aléatoire
+
             const randomMove = moves[Math.floor(Math.random() * moves.length)];
             this.applyMove(randomMove);
-            
-            // Vérifie l'échec et mat
-            if (!playing) {
-                return currentColor === 'noir' ? 1 : -1;
-            }
-            
-            currentColor = currentColor === 'blanc' ? 'noir' : 'blanc';
+
+            if (!playing)
+                return color === 'noir' ? 50 : -60;
+
+            color = current_turn;
             depth++;
         }
-        
-        // Évaluation de la position finale
+
         return this.evaluateBoard();
     }
 
@@ -181,28 +168,24 @@ class MonteCarloAI {
             knight: 3,
             fool: 3,
             rook: 5,
-            queen: 9
+            queen: 10,
+            king: 15
         };
         
         // Compte le matériel
-        for (const piece of whites) {
-            for (const type in pieceValues) {
+        for (const piece of whites)
+            for (const type in pieceValues)
                 if (inside(type, piece.classList)) {
                     score -= pieceValues[type];
                     break;
-                }
-            }
-        }
-        
-        for (const piece of blacks) {
-            for (const type in pieceValues) {
+                }        
+        for (const piece of blacks)
+            for (const type in pieceValues)
                 if (inside(type, piece.classList)) {
                     score += pieceValues[type];
                     break;
                 }
-            }
-        }
-        return score / 10;
+        return score / 15;
     }
 }
 
@@ -210,15 +193,19 @@ class MonteCarloAI {
 const ai = new MonteCarloAI();
 
 async function playAI() {
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     if (current_turn === 'noir' && playing) {
         const bestMove = await ai.getAIMove();
         if (bestMove) {
             // Applique le coup pour de vrai
-            switch_piece(bestMove.piece, bestMove.target);
-            king_alarm();
-            current_turn = 'blanc';
             caption.innerHTML = "Tour des blancs";
+            switch_piece(bestMove.piece, bestMove.target);
+            jeu();
+            if (playing){
+                king_alarm();
+                current_turn = 'blanc';
+            }
         }
-        else alert("J'ai perdu");
     }
 }
