@@ -427,10 +427,10 @@ function click (obj){
 function target_l (obj){
     move(obj, true);
     if (inside(wking, target_list)){
-        wking.style.backgroundColor = "Yellow";
+        wking.style.backgroundColor = "rgb(151, 151, 53)";
     }
     if (inside(bking, target_list)){
-        bking.style.backgroundColor = "Yellow";
+        bking.style.backgroundColor = "rgb(151, 151, 53)";
     }
 }
 
@@ -478,7 +478,7 @@ function switch_piece (source, target){
         dead_pieces.push(target.classList[3]);
         if (inside("king", target.classList)){
             playing = false;
-            target.style.backgroundColor = "yellow";
+            target.style.backgroundColor = "rgb(151, 151, 53)";
             caption.innerHTML = "Les " + current_turn + "s ont gagné";
             reload.style.display = "block";
         }

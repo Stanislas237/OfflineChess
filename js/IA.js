@@ -119,6 +119,9 @@ class MonteCarloAI {
             
             // Ajoute chaque coup possible à la liste
             for (const target of target_list) {
+                if (inside("king", target.classList) && color == "noir")
+                    return [{piece: piece, target:target}];
+
                 moves.push({
                     piece: piece,
                     target: target
@@ -202,6 +205,8 @@ async function playAI() {
             caption.innerHTML = "Tour des blancs";
             switch_piece(bestMove.piece, bestMove.target);
             jeu();
+            bestMove.piece.style.backgroundColor = "magenta";
+            bestMove.target.style.backgroundColor = "pink";
             if (playing){
                 king_alarm();
                 current_turn = 'blanc';
